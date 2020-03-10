@@ -41,9 +41,15 @@ public class MainVerticle extends AbstractVerticle {
     router.route().handler(BodyHandler.create());
     router.route().handler(CorsHandler.create("*").allowedHeaders(allowedHeaders).allowedMethods(allowedMethods));
 
-    // mongodb
+    // system variables
+    String HOST = System.getenv("MONGODB_SERVICE_HOST");
+    if(HOST == null) HOST = "localhost";
+    String PORT = System.getenv("MONGODB_SERVICE_PORT");
+    if(PORT == null) PORT = "27017";
+
+    // mongodb config
     JsonObject config = new JsonObject()
-      .put("connection_string", "mongodb://localhost:27017")
+      .put("connection_string", "mongodb://" + HOST + ":" + PORT)
       .put("db_name", "dpd");
 
     mongoClient = MongoClient.createShared(vertx, config);

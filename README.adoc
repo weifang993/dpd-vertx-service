@@ -25,6 +25,41 @@ To run your application:
 ./mvnw clean compile exec:java
 ```
 
+To run dpd demo, use the following docker-compose file:
+```
+# this is a drug search demo.
+# to run it, `[sudo ] docker-compose -f dpd.yml up"
+# drug-search url: http://localhost:4600
+version: "3"
+services:
+  drug-search:
+    container_name: drug-search
+    image: weifang993/drug-search
+    restart: always
+    ports:
+      - "4600:8080"
+    depends_on:
+      - dpd-service
+  dpd-service:
+    container_name: dpd-vertx-service
+    image: weifang993/dpd-vertx-service
+    restart: always
+    ports:
+      - "8080:8888"
+    environment:
+      - MONGODB_SERVICE_HOST=mongo
+      - MONGODB_SERVICE_PORT=27017
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - /data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+```
+
 == Help
 
 * https://vertx.io/docs/[Vert.x Documentation]
