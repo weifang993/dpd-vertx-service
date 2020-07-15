@@ -12,6 +12,7 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import org.bson.conversions.Bson;
+import io.vertx.ext.auth.mongo.MongoAuthenticationOptions;
 
 import java.util.HashSet;
 import java.util.Set;
