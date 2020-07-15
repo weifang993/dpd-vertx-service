@@ -46,6 +46,12 @@ public class MainVerticle extends AbstractVerticle {
     if(HOST == null) HOST = "localhost";
     String PORT = System.getenv("MONGODB_SERVICE_PORT");
     if(PORT == null) PORT = "27017";
+    String user = System.getenv("MONGODB_USER");
+    String password = System.getenv("MONGODB_PASSWORD");
+
+    JsonObject authInfo = new JsonObject()
+      .put("username", user)
+      .put("password", password);
 
     // mongodb config
     JsonObject config = new JsonObject()
@@ -53,6 +59,8 @@ public class MainVerticle extends AbstractVerticle {
       .put("db_name", "dpd");
 
     mongoClient = MongoClient.createShared(vertx, config);
+    MongoAuthenticationOptions options = new MongoAuthenticationOptions();
+    MongoAuthentication authenticationProvider = MongoAuthentication.create(mongoClient, options);
 
     // routes for native data format
     router.get("/api/drugs/brand_name/:brand").handler(this::handleGetDrugByBrandName);
@@ -74,20 +82,26 @@ public class MainVerticle extends AbstractVerticle {
     if (brand == null) {
       sendError(400, response);
     } else {
-      JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
-
-      mongoClient.find("active_drugs", query, res -> {
-        if (res.succeeded()) {
-          System.out.println("query succeeded. found: " + res.result().size());
-          JsonArray drugs = new JsonArray();
-          for (JsonObject json : res.result()) {
-            drugs.add(json);
-          }
-          response.end(drugs.encodePrettily());
-        } else {
-          res.cause().printStackTrace();
-        }}
-      );
+      authProvider.authenticate(authInfo)
+        .onSuccess(user -> {      
+          JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
+          mongoClient.find("active_drugs", query, res -> {
+            if (res.succeeded()) {
+              System.out.println("query succeeded. found: " + res.result().size());
+              JsonArray drugs = new JsonArray();
+              for (JsonObject json : res.result()) {
+                drugs.add(json);
+              }
+              response.end(drugs.encodePrettily());
+            } else {
+              res.cause().printStackTrace();
+            }}
+          );
+        }
+      )
+      .onFailure(err -> {
+        System.out.println("Faield to authenticate to mongodb");
+      });
     }
   }
 
