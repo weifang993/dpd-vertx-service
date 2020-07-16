@@ -63,7 +63,7 @@ public class MainVerticle extends AbstractVerticle {
       .put("connection_string", connString)
       .put("db_name", "dpd");
 
-//    mongoClient = MongoClient.createShared(vertx, config);
+    mongoClient = MongoClient.createShared(vertx, config);
 //    authProvider = MongoAuth.create(mongoClient, new JsonObject());
     // authProvider.getHashStrategy().setAlgorithm(HashAlgorithm.PBKDF2);
 
