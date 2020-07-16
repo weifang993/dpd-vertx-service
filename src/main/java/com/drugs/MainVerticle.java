@@ -61,7 +61,7 @@ public class MainVerticle extends AbstractVerticle {
 
     mongoClient = MongoClient.createShared(vertx, config);
     authProvider = MongoAuth.create(mongoClient, new JsonObject());
-    authProvider.getHashStrategy().setAlgorithm(HashAlgorithm.PBKDF2);
+    // authProvider.getHashStrategy().setAlgorithm(HashAlgorithm.PBKDF2);
 
     // routes for native data format
     router.get("/api/drugs/brand_name/:brand").handler(this::handleGetDrugByBrandName);
@@ -88,6 +88,7 @@ public class MainVerticle extends AbstractVerticle {
       JsonObject userInfo = new JsonObject()
               .put("username", user)
               .put("password", password);
+      System.out.println("user: " + user + " passowrd: " + password);
       authProvider.authenticate(userInfo, authenRes -> {
         if (authenRes.succeeded()) {
           JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
