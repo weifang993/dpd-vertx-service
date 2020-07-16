@@ -7,26 +7,16 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.AuthProvider;
-import io.vertx.ext.auth.mongo.HashAlgorithm;
-import io.vertx.ext.auth.mongo.MongoAuth;
-import io.vertx.ext.auth.mongo.MongoAuthOptionsConverter;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
-import org.bson.conversions.Bson;
-import io.vertx.ext.auth.mongo.MongoAuthOptions;
-
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.mongodb.client.model.Filters.regex;
-
 public class MainVerticle extends AbstractVerticle {
   private MongoClient mongoClient;
-  private MongoAuth authProvider;
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
@@ -58,14 +48,15 @@ public class MainVerticle extends AbstractVerticle {
     
     // mongodb config
     String connString = "mongodb://" + user + ":" + password + "@" + HOST + ":" + PORT;
+    if(user == null) {
+      connString = "mongodb://" + HOST + ":" + PORT;
+    }
     System.out.println("connection string: " + connString);
     JsonObject config = new JsonObject()
       .put("connection_string", connString)
       .put("db_name", "dpd");
 
     mongoClient = MongoClient.createShared(vertx, config);
-//    authProvider = MongoAuth.create(mongoClient, new JsonObject());
-    // authProvider.getHashStrategy().setAlgorithm(HashAlgorithm.PBKDF2);
 
     // routes for native data format
     router.get("/api/drugs/brand_name/:brand").handler(this::handleGetDrugByBrandName);
@@ -101,42 +92,6 @@ public class MainVerticle extends AbstractVerticle {
       );
     }
   }
-
-//  private void handleGetDrugByBrandName(RoutingContext routingContext) {
-//    String brand = routingContext.request().getParam("brand");
-//
-//    HttpServerResponse response = routingContext.response();
-//    if (brand == null) {
-//      sendError(400, response);
-//    } else {
-//      String user = System.getenv("MONGODB_USER");
-//      String password = System.getenv("MONGODB_PASSWORD");
-//      JsonObject userInfo = new JsonObject()
-//              .put("username", user)
-//              .put("password", password);
-//      System.out.println("user: " + user + " passowrd: " + password);
-//      authProvider.authenticate(userInfo, authenRes -> {
-//        if (authenRes.succeeded()) {
-//          JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
-//          mongoClient.find("active_drugs", query, res -> {
-//                    if (res.succeeded()) {
-//                      System.out.println("query succeeded. found: " + res.result().size());
-//                      JsonArray drugs = new JsonArray();
-//                      for (JsonObject json : res.result()) {
-//                        drugs.add(json);
-//                      }
-//                      response.end(drugs.encodePrettily());
-//                    } else {
-//                      res.cause().printStackTrace();
-//                    }
-//                  }
-//          );
-//        } else {
-//          System.out.println("Faield to authenticate to mongodb");
-//        }
-//      });
-//    }
-//  }
 
   private void sendError(int statusCode, HttpServerResponse response) {
     response.setStatusCode(statusCode).end();
