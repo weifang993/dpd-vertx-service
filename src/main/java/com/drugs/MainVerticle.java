@@ -53,9 +53,7 @@ public class MainVerticle extends AbstractVerticle {
     if(HOST == null) HOST = "localhost";
     String PORT = System.getenv("MONGODB_SERVICE_PORT");
     if(PORT == null) PORT = "27017";
-    String user = System.getenv("MONGODB_USER");
-    String password = System.getenv("MONGODB_PASSWORD");
-
+    
     // mongodb config
     JsonObject config = new JsonObject()
       .put("connection_string", "mongodb://" + HOST + ":" + PORT)
@@ -85,9 +83,11 @@ public class MainVerticle extends AbstractVerticle {
     if (brand == null) {
       sendError(400, response);
     } else {
+      String user = System.getenv("MONGODB_USER");
+      String password = System.getenv("MONGODB_PASSWORD");
       JsonObject userInfo = new JsonObject()
-              .put("username", "dpd")
-              .put("password", "dpd");
+              .put("username", user)
+              .put("password", password);
       authProvider.authenticate(userInfo, authenRes -> {
         if (authenRes.succeeded()) {
           JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
