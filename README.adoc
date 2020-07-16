@@ -4,7 +4,7 @@ This is an example microservice searching for drug information from a mongodb.
 To find drugs by brand name key words:
 "http://localhost:8888/api/drugs/brand_name/[search text, such as allergy, headache...]"
 
-image:https://img.shields.io/badge/vert.x-3.8.5-purple.svg[link="https://vertx.io"]
+image:https://img.shields.io/badge/vert.x-3.9.1-purple.svg[link="https://vertx.io"]
 
 This application was generated using http://start.vertx.io
 
