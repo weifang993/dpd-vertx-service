@@ -4,11 +4,13 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.AuthProvider;
 import io.vertx.ext.auth.mongo.HashAlgorithm;
 import io.vertx.ext.auth.mongo.MongoAuth;
+import io.vertx.ext.auth.mongo.MongoAuthOptionsConverter;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -24,8 +26,7 @@ import static com.mongodb.client.model.Filters.regex;
 
 public class MainVerticle extends AbstractVerticle {
   private MongoClient mongoClient;
-  private AuthProvider authProvider;
-  private JsonObject authInfo;
+  private MongoAuth authProvider;
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
@@ -55,19 +56,14 @@ public class MainVerticle extends AbstractVerticle {
     String user = System.getenv("MONGODB_USER");
     String password = System.getenv("MONGODB_PASSWORD");
 
-    authInfo = new JsonObject()
-      .put("username", user)
-      .put("password", password);
-
     // mongodb config
     JsonObject config = new JsonObject()
       .put("connection_string", "mongodb://" + HOST + ":" + PORT)
       .put("db_name", "dpd");
 
     mongoClient = MongoClient.createShared(vertx, config);
-    // MongoAuthOptions options = new MongoAuthOptions();
-    MongoAuth authProvider = MongoAuth.create(mongoClient, authInfo);
-    authProvider.setHashAlgorithm(HashAlgorithm.PBKDF2);
+    authProvider = MongoAuth.create(mongoClient, new JsonObject());
+    authProvider.getHashStrategy().setAlgorithm(HashAlgorithm.PBKDF2);
 
     // routes for native data format
     router.get("/api/drugs/brand_name/:brand").handler(this::handleGetDrugByBrandName);
@@ -89,7 +85,10 @@ public class MainVerticle extends AbstractVerticle {
     if (brand == null) {
       sendError(400, response);
     } else {
-      authProvider.authenticate(authInfo, authenRes -> {
+      JsonObject userInfo = new JsonObject()
+              .put("username", "dpd")
+              .put("password", "dpd");
+      authProvider.authenticate(userInfo, authenRes -> {
         if (authenRes.succeeded()) {
           JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
           mongoClient.find("active_drugs", query, res -> {

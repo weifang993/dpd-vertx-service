@@ -67,4 +67,9 @@ services:
 * https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
 * https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
 
+== Debug with Intellij
+
+https://www.jetbrains.com/help/idea/work-with-maven-goals.html#run_goal
+Edit configuration and set command line:
+'clean compile exec:java'
 
