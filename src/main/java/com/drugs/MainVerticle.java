@@ -57,8 +57,10 @@ public class MainVerticle extends AbstractVerticle {
     String password = System.getenv("MONGODB_PASSWORD");
     
     // mongodb config
+    String connString = "mongodb://" + user + ":" + password + "@" + HOST + ":" + PORT;
+    System.out.println("connection string: " + connString);
     JsonObject config = new JsonObject()
-      .put("connection_string", "mongodb://" + user + ":" + password + "@" + HOST + ":" + PORT)
+      .put("connection_string", connString)
       .put("db_name", "dpd");
 
 //    mongoClient = MongoClient.createShared(vertx, config);
