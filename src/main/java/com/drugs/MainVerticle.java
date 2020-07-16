@@ -6,13 +6,16 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.AuthProvider;
+import io.vertx.ext.auth.mongo.HashAlgorithm;
+import io.vertx.ext.auth.mongo.MongoAuth;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import org.bson.conversions.Bson;
-import io.vertx.ext.auth.mongo.MongoAuthenticationOptions;
+import io.vertx.ext.auth.mongo.MongoAuthOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +24,8 @@ import static com.mongodb.client.model.Filters.regex;
 
 public class MainVerticle extends AbstractVerticle {
   private MongoClient mongoClient;
+  private AuthProvider authProvider;
+  private JsonObject authInfo;
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
@@ -50,7 +55,7 @@ public class MainVerticle extends AbstractVerticle {
     String user = System.getenv("MONGODB_USER");
     String password = System.getenv("MONGODB_PASSWORD");
 
-    JsonObject authInfo = new JsonObject()
+    authInfo = new JsonObject()
       .put("username", user)
       .put("password", password);
 
@@ -60,8 +65,9 @@ public class MainVerticle extends AbstractVerticle {
       .put("db_name", "dpd");
 
     mongoClient = MongoClient.createShared(vertx, config);
-    MongoAuthenticationOptions options = new MongoAuthenticationOptions();
-    MongoAuthentication authenticationProvider = MongoAuthentication.create(mongoClient, options);
+    // MongoAuthOptions options = new MongoAuthOptions();
+    MongoAuth authProvider = MongoAuth.create(mongoClient, authInfo);
+    authProvider.setHashAlgorithm(HashAlgorithm.PBKDF2);
 
     // routes for native data format
     router.get("/api/drugs/brand_name/:brand").handler(this::handleGetDrugByBrandName);
@@ -83,25 +89,25 @@ public class MainVerticle extends AbstractVerticle {
     if (brand == null) {
       sendError(400, response);
     } else {
-      authProvider.authenticate(authInfo)
-        .onSuccess(user -> {      
+      authProvider.authenticate(authInfo, authenRes -> {
+        if (authenRes.succeeded()) {
           JsonObject query = new JsonObject().put("brandName", new JsonObject().put("$regex", ".*" + brand.toUpperCase() + ".*"));
           mongoClient.find("active_drugs", query, res -> {
-            if (res.succeeded()) {
-              System.out.println("query succeeded. found: " + res.result().size());
-              JsonArray drugs = new JsonArray();
-              for (JsonObject json : res.result()) {
-                drugs.add(json);
-              }
-              response.end(drugs.encodePrettily());
-            } else {
-              res.cause().printStackTrace();
-            }}
+                    if (res.succeeded()) {
+                      System.out.println("query succeeded. found: " + res.result().size());
+                      JsonArray drugs = new JsonArray();
+                      for (JsonObject json : res.result()) {
+                        drugs.add(json);
+                      }
+                      response.end(drugs.encodePrettily());
+                    } else {
+                      res.cause().printStackTrace();
+                    }
+                  }
           );
+        } else {
+          System.out.println("Faield to authenticate to mongodb");
         }
-      )
-      .onFailure(err -> {
-        System.out.println("Faield to authenticate to mongodb");
       });
     }
   }
