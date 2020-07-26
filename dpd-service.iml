@@ -31,6 +31,37 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.2" level="project" />
     <orderEntry type="library" name="Maven: io.vertx:vertx-web-api-contract:3.9.1" level="project" />
     <orderEntry type="library" name="Maven: com.networknt:json-schema-validator:1.0.31" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.2" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.24" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-mongo-client:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-auth-mongo:3.9.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-junit5:3.9.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-rx-java:3.9.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-rx-gen:3.9.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-codegen:3.9.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-rx-java2:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-web:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-web-common:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-auth-common:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-bridge-common:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-core:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http2:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.49.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.2" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-web-api-contract:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.networknt:json-schema-validator:1.0.31" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.5" level="project" />
     <orderEntry type="library" name="Maven: io.swagger.parser.v3:swagger-parser-v3:2.0.14" level="project" />
@@ -49,7 +80,6 @@
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-async:3.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:bson:3.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:3.10.1" level="project" />
-    <orderEntry type="library" name="Maven: io.vertx:vertx-auth-mongo:3.9.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-junit5:3.9.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-rx-java:3.9.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.reactivex:rxjava:1.3.8" level="project" />
