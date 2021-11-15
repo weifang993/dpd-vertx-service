@@ -1,2 +1,14 @@
-.class
+.vscode
+# JetBrains Rider
+.idea/
+*.iml
+.classpath
+*.lst
+*.class
+.settings/*
 target/
+.project
+
+*/.settings/*
+*/.classpath
+*/.project
