@@ -17,7 +17,7 @@ jobs:
           distribution: 'adopt' 
           java-version: '11'
       - name: install maven
-        run: apt update && apt install maven
+        run: sudo apt update && sudo apt install maven
       - name: build project
         run: mvn clean package
       - name: build docker image
