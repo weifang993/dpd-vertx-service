@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: set up java 
       - uses: actions/setup-java@v2
-          with:
-            distribution: 'adopt' 
-            java-version: '11'
+        with:
+          distribution: 'adopt' 
+          java-version: '11'
       - name: install maven
         run: apt update && apt install maven
       - name: build project
