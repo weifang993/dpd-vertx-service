@@ -7,16 +7,14 @@ jobs:
   build-and-publish:
     name: build and publish
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java-version: [11]
+
     steps:
       - name: check out the source code
       - uses: actions/checkout@v2
-      - name: set up java
+      - name: set up java 
       - uses: actions/setup-java@v2
           with:
-            distribution: 'temurin' # See 'Supported distributions' for available options
+            distribution: 'adopt' 
             java-version: '11'
       - name: install maven
         run: apt update && apt install maven
